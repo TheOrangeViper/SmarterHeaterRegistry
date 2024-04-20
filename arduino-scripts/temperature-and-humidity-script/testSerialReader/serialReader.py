@@ -1,18 +1,31 @@
 import serial.tools.list_ports
 
-serialInst = serial.Serial()
+arduino = serial.Serial()
 
 portVar = "COM4"
 baudRate = 9600
 
+arduino.baudrate = baudRate
+arduino.port = portVar
+arduino.open()
 
-serialInst.baudrate = baudRate
-serialInst.port = portVar
-serialInst.open()
+idle = True
 
 
-while True:
-    if serialInst.in_waiting:
-        packet = serialInst.readline()
-        print(packet.decode('utf'))
+def write_read(command_arduino):
+    try:
+        arduino.write(bytes(command_arduino,'utf-8'))
+        data = arduino.readline().decode('utf-8')
+        return data
+    except:
+        return "failed"
+
+while idle == True:
+    myCommand = input("Command: ")
+    print(write_read(myCommand))
+
+# while True:
+#     if arduino.in_waiting:
+#         packet = arduino.readline()
+#         print(packet.decode('utf'))
     
